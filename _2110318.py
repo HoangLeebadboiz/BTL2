@@ -30,7 +30,7 @@ class Evaluator:
         score = 0
         if self.global_board[index_board] != 0:
             score = self.global_board[index_board] * \
-                positionGloScore[index_board] * 100
+                positionGloScore[index_board] * 70
         else:
             LocalBoard = self.blocks[index_board].copy()
             Glo_score = np.array(positionGloScore).reshape((3, 3))
@@ -39,7 +39,7 @@ class Evaluator:
                     score += LocalBoard[row][col] * \
                         (positionLocalScore[row]
                          [col] + Glo_score[row][col]/1.7)
-            score += self.prepare_win(LocalBoard)*30
+            score += self.prepare_win(LocalBoard)*10
         return score
 
     def evalGloBoard(self):
