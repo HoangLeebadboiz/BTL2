@@ -7,9 +7,10 @@ from _2110318 import Evaluator
 def select_move_util(cur_state, remain_time, depth, ini):
 
     if depth == 0:
-        if ini % 2 == 0:
+        if ini % 2 != 0:
             max_point = -999999
             chosenMove = None
+            move = None
             valid_moves = cur_state.get_valid_moves
             for i in valid_moves:
                 b = simulate_move(cur_state, i)
@@ -18,10 +19,12 @@ def select_move_util(cur_state, remain_time, depth, ini):
                 if point > max_point:
                     max_point = point
                     chosenMove = b
-            return (chosenMove, point)
+                    move = i
+            return (chosenMove, move, max_point)
         else:
             min_point = 999999
             chosenMove = None
+            move = None
             valid_moves = cur_state.get_valid_moves
             for i in valid_moves:
                 b = simulate_move(cur_state, i)
@@ -30,32 +33,39 @@ def select_move_util(cur_state, remain_time, depth, ini):
                 if point < min_point:
                     min_point = point
                     chosenMove = b
-            return (chosenMove, point)
-    elif (ini - depth) % 2 != 0:  # Min
+                    move = i
+            return (chosenMove, move, min_point)
+    elif (ini - depth) % 2 == 0:  # Min
         min_point = 999999
         chosenMove = None
+        move = None
         valid_moves = cur_state.get_valid_moves
+        if len(valid_moves) == 0:
+            return (chosenMove, move, min_point)
         for i in valid_moves:
             b = simulate_move(cur_state, i)
             # b = State()
-            point = select_move_util(b, remain_time, depth-1, ini)[1]
+            point = select_move_util(b, remain_time, depth-1, ini)[2]
             if point < min_point:
-                max_point = point
+                min_point = point
                 chosenMove = b
-            return (chosenMove, point)
+                move = i
+        return (chosenMove, move, min_point)
     else:
         max_point = -999999
         chosenMove = None
+        move = None
         valid_moves = cur_state.get_valid_moves
+        if len(valid_moves) == 0:
+            return (chosenMove, move, max_point)
         for i in valid_moves:
             b = simulate_move(cur_state, i)
-            evaluate = Evaluator(b)
-            point = select_move_util(b, remain_time, depth-1, ini)[1]
-            point = evaluate.evalGame()
+            point = select_move_util(b, remain_time, depth-1, ini)[2]
             if point > max_point:
                 max_point = point
                 chosenMove = b
-        return (chosenMove, point)
+                move = i
+        return (chosenMove, move, max_point)
 
 
 def simulate_move(cur_state: State, move: UltimateTTT_Move):
@@ -80,9 +90,9 @@ def select_move(cur_state, remain_time):
     valid_moves = cur_state.get_valid_moves
     if len(valid_moves) == 0:
         return None
-    chosen = select_move_util(cur_state, remain_time, 4, 5)[0]
-    b = simulate_move(cur_state, chosen.previous_move)
+    chosen = select_move_util(cur_state, remain_time, 2, 2)
+    b = simulate_move(cur_state, chosen[1])
     evaluate = Evaluator(b)
     point = evaluate.evalGame()
     print(point)
-    return chosen.previous_move
+    return chosen[1]

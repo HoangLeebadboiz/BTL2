@@ -28,26 +28,26 @@ class Evaluator:
 
     def evalLocalBoard(self, index_board):
         score = 0
-        LocalBoard = self.blocks[index_board].copy()
-        Glo_score = np.array(positionGloScore).reshape((3, 3))
-        for row in range(3):
-            for col in range(3):
-                score += LocalBoard[row][col] * \
-                    (positionLocalScore[row][col] + Glo_score[row][col]/1.7)
-        LocalBoard_1d = LocalBoard.reshape(-1)
-        if self.checkwin(LocalBoard_1d):
-            score += self.global_board[index_board] * \
+        if self.global_board[index_board] != 0:
+            score = self.global_board[index_board] * \
                 positionGloScore[index_board] * 100
         else:
-            score += self.prepare_win(LocalBoard)*10
+            LocalBoard = self.blocks[index_board].copy()
+            Glo_score = np.array(positionGloScore).reshape((3, 3))
+            for row in range(3):
+                for col in range(3):
+                    score += LocalBoard[row][col] * \
+                        (positionLocalScore[row]
+                         [col] + Glo_score[row][col]/1.7)
+            score += self.prepare_win(LocalBoard)*30
         return score
 
     def evalGloBoard(self):
         score = 0
-        for i in range(9):
-            score += self.global_board[i]*positionGloScore[i]
+        """for i in range(9):
+            score += self.global_board[i]*positionGloScore[i]"""
         Glo_board = self.global_board.reshape((3, 3))
-        score += self.prepare_win(Glo_board)*100
+        score += self.prepare_win(Glo_board)*150
         return score
 
     @staticmethod
