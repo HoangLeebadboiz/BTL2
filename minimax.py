@@ -13,6 +13,7 @@ def select_move_util(cur_state, remain_time, depth, ini):
             move = None
             valid_moves = cur_state.get_valid_moves
             if len(valid_moves) == 0:
+                print(max_point)
                 return (chosenMove, move, max_point)
             for i in valid_moves:
                 b = simulate_move(cur_state, i)
@@ -29,6 +30,7 @@ def select_move_util(cur_state, remain_time, depth, ini):
             move = None
             valid_moves = cur_state.get_valid_moves
             if len(valid_moves) == 0:
+                print(min_point)
                 return (chosenMove, move, min_point)
             for i in valid_moves:
                 b = simulate_move(cur_state, i)
@@ -45,6 +47,7 @@ def select_move_util(cur_state, remain_time, depth, ini):
         move = None
         valid_moves = cur_state.get_valid_moves
         if len(valid_moves) == 0:
+            print(min_point)
             return (chosenMove, move, min_point)
         for i in valid_moves:
             b = simulate_move(cur_state, i)
@@ -60,6 +63,7 @@ def select_move_util(cur_state, remain_time, depth, ini):
         move = None
         valid_moves = cur_state.get_valid_moves
         if len(valid_moves) == 0:
+            print(max_point)
             return (chosenMove, move, max_point)
         for i in valid_moves:
             b = simulate_move(cur_state, i)
@@ -91,8 +95,6 @@ def simulate_move(cur_state: State, move: UltimateTTT_Move):
 
 def select_move(cur_state, remain_time):
     valid_moves = cur_state.get_valid_moves
-    """if len(valid_moves) == 81:
-        return valid_moves[36]"""
     if len(valid_moves) == 0:
         return None
     ini = 0
@@ -102,10 +104,4 @@ def select_move(cur_state, remain_time):
         ini = 2
     chosen = select_move_util(cur_state, remain_time, 2, ini)
     b = simulate_move(cur_state, chosen[1])
-    """print(chosen[1])
-    print(b.global_cells)
-    evaluate = Evaluator(b)
-    point = evaluate.evalGame()
-    print(point)
-    print(chosen[2])"""
     return chosen[1]

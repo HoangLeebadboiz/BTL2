@@ -35,7 +35,7 @@ class Evaluator:
         new_positionGloScore = self.score_position(Glo_board).reshape(-1)
         if self.global_board[index_board] != 0:
             score = self.global_board[index_board] * \
-                new_positionGloScore[index_board] * 70
+                new_positionGloScore[index_board] * 200
         else:
             LocalBoard = self.blocks[index_board].copy()
             Glo_score = positionGloScore.reshape((3, 3))
@@ -53,7 +53,7 @@ class Evaluator:
         """for i in range(9):
             score += self.global_board[i]*positionGloScore[i]"""
         Glo_board = self.global_board.reshape((3, 3))
-        score += self.prepare_win(Glo_board)*150
+        score += self.prepare_win(Glo_board)*200
         return score
 
     @staticmethod
