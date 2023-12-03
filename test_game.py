@@ -137,7 +137,7 @@ def play_auto(player_X, player_O, rule=1):
     while True:
         draw(state)
         # delay drawing
-        time.sleep(1)
+        # time.sleep(1)
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -163,9 +163,9 @@ def play_auto(player_X, player_O, rule=1):
             continue
 
         state.act_move(new_move)
-        print(state.blocks[1])
+        # print(state.blocks[1])
         turn += 1
 
 
-play_auto('random_agent', 'minimax')
-# play_step_by_step('random_agent', 'minimax')
+# play_auto('minimax', 'tk')
+play_step_by_step('tk', 'minimax')
