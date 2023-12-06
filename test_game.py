@@ -168,4 +168,4 @@ def play_auto(player_X, player_O, rule=1):
 
 
 # play_auto('minimax', 'tk')
-play_step_by_step('_MSSV', 'minimax')
+play_step_by_step('minimax', 'minimax')
