@@ -97,6 +97,8 @@ def select_move(cur_state, remain_time):
     valid_moves = cur_state.get_valid_moves
     if len(valid_moves) == 0:
         return None
+    if len(valid_moves) == 81:
+        return valid_moves[36]
     ini = 0
     if cur_state.get_valid_moves[0].value == 1:
         ini = 3

@@ -32,14 +32,18 @@ class Evaluator:
     def evalLocalBoard(self, index_board):
         score = 0
         Glo_board = self.global_board.copy().reshape((3, 3))
-        new_positionGloScore = self.score_position(Glo_board).reshape(-1)
+        new_positionGloScore = self.score_position(
+            Glo_board, positionGloScore.reshape((3, 3))).reshape(-1)
+        # print("Glo score:", new_positionGloScore)
         if self.global_board[index_board] != 0:
             score = self.global_board[index_board] * \
                 new_positionGloScore[index_board] * 200
         else:
             LocalBoard = self.blocks[index_board].copy()
             Glo_score = positionGloScore.reshape((3, 3))
-            new_positionLocalScore = self.score_position(LocalBoard)
+            new_positionLocalScore = self.score_position(
+                LocalBoard, positionLocalScore)
+            # print("Local score:", new_positionLocalScore)
             for row in range(3):
                 for col in range(3):
                     score += LocalBoard[row][col] * \
@@ -83,25 +87,25 @@ class Evaluator:
             num_check += self.diagonal_check_2(Board)
         return num_check
 
-    def score_position(self, board):
-        new_positionLocalScore = positionLocalScore.copy()
+    def score_position(self, board, position_score):
+        new_position_Score = position_score.copy()
         for i in range(3):
             if self.row_check(i, board) == None:
-                new_positionLocalScore[i] -= win_percent_onekey[i] * \
-                    new_positionLocalScore[i]
+                new_position_Score[i] -= win_percent_onekey[i] * \
+                    new_position_Score[i]
             if self.col_check(i, board) == None:
                 for j in range(3):
-                    new_positionLocalScore[j][i] -= win_percent_onekey[j][i] * \
-                        new_positionLocalScore[j][i]
+                    new_position_Score[j][i] -= win_percent_onekey[j][i] * \
+                        new_position_Score[j][i]
         if self.diagonal_check_1(board) == None:
             for i in range(3):
-                new_positionLocalScore[i][i] -= win_percent_onekey[i][i] * \
-                    new_positionLocalScore[i][i]
+                new_position_Score[i][i] -= win_percent_onekey[i][i] * \
+                    new_position_Score[i][i]
         if self.diagonal_check_2(board) == None:
             for i in range(3):
-                new_positionLocalScore[i][2-i] -= win_percent_onekey[i][2-i] * \
-                    new_positionLocalScore[i][2-i]
-        return new_positionLocalScore
+                new_position_Score[i][2-i] -= win_percent_onekey[i][2-i] * \
+                    new_position_Score[i][2-i]
+        return new_position_Score
 
     @staticmethod
     def row_check(row, board):
