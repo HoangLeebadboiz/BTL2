@@ -1,5 +1,7 @@
 # BTL2
 
+---
+
 ## Ultimate Tic Tac Toe
 
 Ultimate Tic Tac Toe (Project from Ho Chi Minh City University of Technology).\
