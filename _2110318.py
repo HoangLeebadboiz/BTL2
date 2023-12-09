@@ -17,7 +17,7 @@ class Evaluator:
         self.global_board = cur_state.global_cells
         self.blocks = cur_state.blocks
         # self.valid_boards = self.get_valid_Board(cur_state)
-        self.player = cur_state.get_valid_moves[0].value
+        self.player = cur_state.player_to_move
 
     def evalGame(self):
         score = 0
@@ -49,7 +49,7 @@ class Evaluator:
                     score += LocalBoard[row][col] * \
                         (new_positionLocalScore[row]
                          [col] + Glo_score[row][col]/1.7)
-            score += self.prepare_win(LocalBoard)*6
+            score += self.prepare_win(LocalBoard)*10
         return score
 
     def evalGloBoard(self):
@@ -57,7 +57,7 @@ class Evaluator:
         """for i in range(9):
             score += self.global_board[i]*positionGloScore[i]"""
         Glo_board = self.global_board.reshape((3, 3))
-        score += self.prepare_win(Glo_board)*200
+        score += self.prepare_win(Glo_board)*250
         return score
 
     @staticmethod
