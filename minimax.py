@@ -12,26 +12,52 @@ def select_move_util(cur_state, remain_time, depth, alpha, beta, player):
             chosenMove = None
             move = None
             valid_moves = cur_state.get_valid_moves
-            for i in valid_moves:
-                b = simulate_move(cur_state, i)
-                evaluate = Evaluator(b)
-                point = evaluate.evalGame()
-                if point == 5000:
-                    alpha = point
-                    chosenMove = b
-                    move = i
-                    break
-                if point > alpha:
-                    alpha = point
-                    chosenMove = b
-                    move = i
-                    if beta <= alpha:
+            if len(valid_moves) != 0:
+                for i in valid_moves:
+                    b = simulate_move(cur_state, i)
+                    evaluate = Evaluator(b)
+                    point = evaluate.evalGame()
+                    if point == 5000:
+                        alpha = point
+                        chosenMove = b
+                        move = i
                         break
-            return (chosenMove, move, alpha)
+                    if point > alpha:
+                        alpha = point
+                        chosenMove = b
+                        move = i
+                        if beta <= alpha:
+                            break
+                return (chosenMove, move, alpha)
+            return (chosenMove, move, 0)
         else:  # Min
             chosenMove = None
             move = None
             valid_moves = cur_state.get_valid_moves
+            if len(valid_moves) != 0:
+                for i in valid_moves:
+                    b = simulate_move(cur_state, i)
+                    evaluate = Evaluator(b)
+                    point = evaluate.evalGame()
+                    if point == -5000:
+                        beta = point
+                        chosenMove = b
+                        move = i
+                        break
+                    if point < beta:
+                        beta = point
+                        chosenMove = b
+                        move = i
+                        if beta <= alpha:
+                            break
+                return (chosenMove, move, beta)
+            return (chosenMove, move, 0)
+    elif player == -1:  # Min
+        chosenMove = None
+        move = None
+        valid_moves = cur_state.get_valid_moves
+        if len(valid_moves) != 0:
+            player *= -1
             for i in valid_moves:
                 b = simulate_move(cur_state, i)
                 evaluate = Evaluator(b)
@@ -41,6 +67,8 @@ def select_move_util(cur_state, remain_time, depth, alpha, beta, player):
                     chosenMove = b
                     move = i
                     break
+                point = select_move_util(
+                    b, remain_time, depth-1, alpha, beta, player)[2]
                 if point < beta:
                     beta = point
                     chosenMove = b
@@ -48,48 +76,32 @@ def select_move_util(cur_state, remain_time, depth, alpha, beta, player):
                     if beta <= alpha:
                         break
             return (chosenMove, move, beta)
-    elif player == -1:  # Min
-        chosenMove = None
-        move = None
-        valid_moves = cur_state.get_valid_moves
-        player *= -1
-        for i in valid_moves:
-            b = simulate_move(cur_state, i)
-            point = select_move_util(
-                b, remain_time, depth-1, alpha, beta, player)[2]
-            if point == -5000:
-                beta = point
-                chosenMove = b
-                move = i
-                break
-            if point < beta:
-                beta = point
-                chosenMove = b
-                move = i
-                if beta <= alpha:
-                    break
-        return (chosenMove, move, beta)
+        return (chosenMove, move, 0)
     else:
         chosenMove = None
         move = None
         valid_moves = cur_state.get_valid_moves
-        player *= -1
-        for i in valid_moves:
-            b = simulate_move(cur_state, i)
-            point = select_move_util(
-                b, remain_time, depth-1, alpha, beta, player)[2]
-            if point == 5000:
-                alpha = point
-                chosenMove = b
-                move = i
-                break
-            if point > alpha:
-                alpha = point
-                chosenMove = b
-                move = i
-                if beta <= alpha:
+        if len(valid_moves) != 0:
+            player *= -1
+            for i in valid_moves:
+                b = simulate_move(cur_state, i)
+                evaluate = Evaluator(b)
+                point = evaluate.evalGame()
+                if point == 5000:
+                    alpha = point
+                    chosenMove = b
+                    move = i
                     break
-        return (chosenMove, move, alpha)
+                point = select_move_util(
+                    b, remain_time, depth-1, alpha, beta, player)[2]
+                if point > alpha:
+                    alpha = point
+                    chosenMove = b
+                    move = i
+                    if beta <= alpha:
+                        break
+            return (chosenMove, move, alpha)
+        return (chosenMove, move, 0)
 
 
 def simulate_move(cur_state: State, move: UltimateTTT_Move):
@@ -113,10 +125,11 @@ def simulate_move(cur_state: State, move: UltimateTTT_Move):
 def select_move(cur_state, remain_time):
     valid_moves = cur_state.get_valid_moves
     if len(valid_moves) != 0:
-        depth = 2
+        depth = 3
         player = cur_state.player_to_move
         alpha = float('-inf')
         beta = float('inf')
         chosen = select_move_util(cur_state, remain_time,
                                   depth, alpha, beta, player)
         return chosen[1]
+    return None

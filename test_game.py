@@ -167,5 +167,5 @@ def play_auto(player_X, player_O, rule=1):
         turn += 1
 
 
-# play_auto('minimax', 'tk')
-play_step_by_step('minimax', 'tk', rule=1)
+# play_auto('minimax', 'tk', rule=2)
+play_step_by_step('minimax', 'minimax', rule=1)
