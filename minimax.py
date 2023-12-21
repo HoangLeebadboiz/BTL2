@@ -122,14 +122,33 @@ def simulate_move(cur_state: State, move: UltimateTTT_Move):
     return res
 
 
+def utils(cur_state):
+    if cur_state.previous_move != None:
+        index_local_board = cur_state.previous_move.x * 3 + cur_state.previous_move.y
+    else:
+        index_local_board = -1
+
+    board = np.array([block.flatten() for block in cur_state.blocks])
+    return board, index_local_board
+
+
 def select_move(cur_state, remain_time):
+
+    board, currentBoard = utils(cur_state)
+
     valid_moves = cur_state.get_valid_moves
+
     if len(valid_moves) != 0:
         depth = 3
         player = cur_state.player_to_move
         alpha = float('-inf')
         beta = float('inf')
-        chosen = select_move_util(cur_state, remain_time,
-                                  depth, alpha, beta, player)
-        return chosen[1]
+
+        if currentBoard == -1:
+            return UltimateTTT_Move(0, 0, 0, player)
+        else:
+            chosen = select_move_util(cur_state, remain_time,
+                                      depth, alpha, beta, player)
+            return chosen[1]
+
     return None
